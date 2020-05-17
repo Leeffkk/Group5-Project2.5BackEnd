@@ -1,0 +1,67 @@
+[{
+  "_id": {
+    "$oid": "5ec08ac9ce37fd5e4c93a46f"
+  },
+  "firstName": "Vincent",
+  "lastName": "Conte",
+  "Username": "vconte",
+  "Password": "password",
+  "groups": [
+    "admin"
+  ]
+},{
+  "_id": {
+    "$oid": "5ec08cb0ce37fd5e4c93a470"
+  },
+  "firstName": "Kim",
+  "lastName": "Jin",
+  "Username": "kjin",
+  "Password": "password",
+  "groups": [
+    "admin"
+  ]
+},{
+  "_id": {
+    "$oid": "5ec08cc1ce37fd5e4c93a471"
+  },
+  "firstName": "Jeremy",
+  "lastName": "Redrup",
+  "Username": "jredrup",
+  "Password": "password",
+  "groups": [
+    "admin"
+  ]
+},{
+  "_id": {
+    "$oid": "5ec08cd4ce37fd5e4c93a472"
+  },
+  "firstName": "Ryan",
+  "lastName": "Melillo",
+  "Username": "rmelillo",
+  "Password": "password",
+  "groups": [
+    "admin"
+  ]
+},{
+  "_id": {
+    "$oid": "5ec08cdece37fd5e4c93a473"
+  },
+  "firstName": "Yufan",
+  "lastName": "Wang",
+  "Username": "ywang",
+  "Password": "password",
+  "groups": [
+    "admin"
+  ]
+},{
+  "_id": {
+    "$oid": "5ec08ce4ce37fd5e4c93a474"
+  },
+  "firstName": "John",
+  "lastName": "Doe",
+  "Username": "Jdoe",
+  "Password": "password",
+  "groups": [
+    "user"
+  ]
+}]

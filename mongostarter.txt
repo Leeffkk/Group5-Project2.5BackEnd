@@ -1,0 +1,65 @@
+db.users.insertOne(
+{
+	firstName: "Vincent",
+	lastName: "Conte",
+	Username: "vconte",
+	Password: "password",
+	groups: ["admin"]
+}
+)
+
+db.users.insertOne(
+{
+	firstName: "Kim",
+	lastName: "Jin",
+	Username: "kjin",
+	Password: "password",
+	groups: ["admin"]
+}
+)
+
+db.users.insertOne(
+{
+	firstName: "Jeremy",
+	lastName: "Redrup",
+	Username: "jredrup",
+	Password: "password",
+	groups: ["admin"]
+}
+)
+
+db.users.insertOne(
+{
+	firstName: "Ryan",
+	lastName: "Melillo",
+	Username: "rmelillo",
+	Password: "password",
+	groups: ["admin"]
+}
+)
+db.users.insertOne(
+{
+	firstName: "Yufan",
+	lastName: "Wang",
+	Username: "ywang",
+	Password: "password",
+	groups: ["admin"]
+}
+)
+db.users.insertOne(
+{
+	firstName: "John",
+	lastName: "Doe",
+	Username: "Jdoe",
+	Password: "password",
+	groups: ["user"]
+}
+)
+
+
+
+
+
+
+
+
