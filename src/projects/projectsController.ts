@@ -11,8 +11,7 @@ export class ProjectsController {
     //getProjects
     //sends a json object with all projects in the system that match :year
     getProjects(req: express.Request, res: express.Response) {
-        const semester = req.params.semester;
-        ProjectsController.db.getRecords(ProjectsController.projectsTable, { semester: semester })
+        ProjectsController.db.getRecords(ProjectsController.projectsTable, {})
             .then((results) => res.send({ fn: 'getProjects', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
 
