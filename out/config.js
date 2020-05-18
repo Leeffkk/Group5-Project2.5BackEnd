@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Config = void 0;
 //configuration information 
 exports.Config = {
     serverport: process.env.PORT || 3000,

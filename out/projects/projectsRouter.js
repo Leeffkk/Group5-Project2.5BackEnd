@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectsRouter = void 0;
 var AppRouter_1 = require("../common/AppRouter");
 var securityMiddleware_1 = require("../security/securityMiddleware");
 var projectsController_1 = require("./projectsController");
@@ -24,12 +25,11 @@ var ProjectsRouter = /** @class */ (function (_super) {
     }
     //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
     ProjectsRouter.prototype.setupRoutes = function () {
-        this.expressRouter.get('/semesters', ProjectsRouter.projController.getSemesters);
-        this.expressRouter.get('/projectNumbers/:semester', ProjectsRouter.projController.getProjectNumbers);
-        this.expressRouter.get('/:semester', ProjectsRouter.projController.getProjects);
-        this.expressRouter.get('/:semester/:id', ProjectsRouter.projController.getProject);
+        this.expressRouter.get('/getProjects', ProjectsRouter.projController.getProjects);
+        this.expressRouter.get('/getProjectsByCurUser', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.getProjectsByCurUser);
+        // this.expressRouter.get('/getProjectsById',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getProjectsById);
         this.expressRouter.post('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.addProject);
-        this.expressRouter.put('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.updateProject);
+        this.expressRouter.put('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.updateProject);
         this.expressRouter.delete('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.deleteProject);
     };
     ProjectsRouter.projController = new projectsController_1.ProjectsController();

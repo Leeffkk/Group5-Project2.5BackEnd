@@ -9,27 +9,34 @@ export class ProjectsController {
     static projectsTable = 'projects';
 
     //getProjects
-    //sends a json object with all projects in the system that match :year
+    //sends a json object with all projects in the system
     getProjects(req: express.Request, res: express.Response) {
         ProjectsController.db.getRecords(ProjectsController.projectsTable, {})
             .then((results) => res.send({ fn: 'getProjects', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
 
     }
-    //getProject
-    //sends the specific project as JSON with id=:id
-    getProject(req: express.Request, res: express.Response) {
-        const semester = req.params.semester;
-        const id = Database.stringToId(req.params.id);
-        ProjectsController.db.getOneRecord(ProjectsController.projectsTable, { _id: id, semester: semester })
-            .then((results) => res.send({ fn: 'getProject', status: 'success', data: results }).end())
+    //getProjectsByCurUser
+    //sends the specific project as JSON with current user as groupmember
+    getProjectsByCurUser(req: express.Request, res: express.Response) {
+        const user = req.body.authUser;
+        ProjectsController.db.getRecords(ProjectsController.projectsTable, {'groupMembers':{$in:[user.email]}})
+            .then((results) => res.send({ fn: 'getProjectsByCurUser', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
+    //getProjectsById
+    //sends the specific project as JSON with id=:id
+    // getProjectsById(req: express.Request, res: express.Response) {
+    //     const id = Database.stringToId(req.params.id);
+    //     ProjectsController.db.getRecords(ProjectsController.projectsTable, {_id: id})
+    //         .then((results) => res.send({ fn: 'getProjectsByCurUser', status: 'success', data: results }).end())
+    //         .catch((reason) => res.status(500).send(reason).end());
+    // }
     //addProject
     //adds the project to the database
     addProject(req: express.Request, res: express.Response) {
         const proj: ProjectsModel = ProjectsModel.fromObject(req.body);
-
+        proj.posts=[];
         ProjectsController.db.addRecord(ProjectsController.projectsTable, proj.toObject())
             .then((result: boolean) => res.send({ fn: 'addProject', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());
@@ -38,9 +45,10 @@ export class ProjectsController {
     //updateProject
     //updates the project in the database with id :id
     updateProject(req: express.Request, res: express.Response) {
-        const id = Database.stringToId(req.params.id);
+        const id = Database.stringToId(req.body.id);
         const data = req.body;
         delete data.authUser;
+        delete data.id;
         ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
             .then((results) => results ? (res.send({ fn: 'updateProject', status: 'success' })) : (res.send({ fn: 'updateProject', status: 'failure', data: 'Not found' })).end())
             .catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());

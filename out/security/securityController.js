@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SecurityController = void 0;
 var config_1 = require("../config");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var userModel_1 = require("./userModel");

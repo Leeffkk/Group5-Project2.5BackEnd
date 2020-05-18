@@ -2,20 +2,23 @@
 export class ProjectsModel{
     id='';
     name='';
-    description?='';
+    description='';
     url='';
     groupMembers:string[]=[];
     posts:string[]=[];
-
-    public constructor(){
-    }
 
     static fromObject(object:any):ProjectsModel{
         const p:ProjectsModel=new ProjectsModel();
         p.name=object.name;
         p.description=object.description;
         p.url=object.url;
-        p.groupMembers=object.groupMembers;
+
+        if(object.groupMembers){
+            var tmp = object.groupMembers;
+            tmp = tmp.substring(1, tmp.length-1);
+            p.groupMembers = tmp.split(",")
+        }
+
         p.posts=object.posts;
         return p;
     }

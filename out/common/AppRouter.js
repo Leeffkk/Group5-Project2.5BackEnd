@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppRouter = void 0;
 var express_1 = __importDefault(require("express"));
 /*AppRouter represents a route on the server.  AppRouters can be strung
         together to create a heirarchy */
@@ -17,7 +18,7 @@ var AppRouter = /** @class */ (function () {
         get: function () {
             return this.router;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     //addRouter: Adds a child router on the given path beneath this router

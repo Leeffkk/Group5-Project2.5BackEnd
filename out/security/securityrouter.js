@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SecurityRouter = void 0;
 var AppRouter_1 = require("../common/AppRouter");
 var securityController_1 = require("./securityController");
 var securityMiddleware_1 = require("./securityMiddleware");

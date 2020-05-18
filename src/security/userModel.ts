@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 export class UserModel{
     id?='';
     email = '';
-    isAdmin?= '';
+    isAdmin= '';
     private _password='';
 
     //when user password is set through here, it is stored encrypted
@@ -18,13 +18,14 @@ export class UserModel{
     public constructor(email:string,password:string){
         this.email=email;
         this.password=password;
-        this.isAdmin='';
+        this.isAdmin='False';
     }
 
     //does not encrypt password, expects already encrypted password
     static fromObject=(obj:any):UserModel=>{
         const mdl=new UserModel(obj.email,'');
         mdl._password=obj.password;
+        mdl.isAdmin="False";
         return mdl;
     }
 

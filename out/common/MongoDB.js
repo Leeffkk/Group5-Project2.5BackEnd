@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Database = void 0;
 var mongodb_1 = require("mongodb");
 /*Wrapper class for accessing Mongo Databse*/
 var Database = /** @class */ (function () {
