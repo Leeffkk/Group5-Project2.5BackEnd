@@ -14,9 +14,9 @@ export class ProjectsModel{
         const p:ProjectsModel=new ProjectsModel();
         p.name=object.name;
         p.description=object.description;
-        p.url=object.groupId;
+        p.url=object.url;
         p.groupMembers=object.groupMembers;
-        p.posts=object.projectNumber;
+        p.posts=object.posts;
         return p;
     }
     toObject():any{
