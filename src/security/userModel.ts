@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 export class UserModel{
     id?='';
     email = '';
+    isAdmin?= '';
     private _password='';
 
     //when user password is set through here, it is stored encrypted
@@ -17,6 +18,7 @@ export class UserModel{
     public constructor(email:string,password:string){
         this.email=email;
         this.password=password;
+        this.isAdmin='';
     }
 
     //does not encrypt password, expects already encrypted password
@@ -27,7 +29,7 @@ export class UserModel{
     }
 
     //includes encrypted password
-    toObject=(): any=> ({email: this.email,password: this.password});
+    toObject=(): any=> ({email: this.email,password: this.password,isAdmin:this.isAdmin});
 
     //compares unencrypted password to encrypted password
     validatePassword(password:string):boolean{

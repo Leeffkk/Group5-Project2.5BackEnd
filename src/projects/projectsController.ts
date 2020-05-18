@@ -65,7 +65,7 @@ export class ProjectsController {
                 //removes duplciates
                 semesters = semesters.filter((value: string, index: number, array: any[]) =>
                     !array.filter((v, i) => value === v && i < index).length);
-                res.send({ fn: 'deleteProject', status: 'success', data: { semesters: semesters } })
+                res.send({ fn: 'getSemesters', status: 'success', data: { semesters: semesters } })
             })
             .catch((reason) => res.status(500).send(reason).end());
     }
@@ -80,7 +80,7 @@ export class ProjectsController {
                 //removes duplciates
                 projects = projects.filter((value: number, index: number, array: any[]) =>
                     !array.filter((v, i) => value === v && i < index).length);
-                res.send({ fn: 'deleteProject', status: 'success', data: { projectNumbers:projects.sort()} });
+                res.send({ fn: 'getProjectNumbers', status: 'success', data: { projectNumbers:projects.sort()} });
             })
             .catch((reason) => res.status(500).send(reason).end());
     }
