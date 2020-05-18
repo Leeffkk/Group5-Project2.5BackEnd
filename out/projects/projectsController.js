@@ -54,7 +54,7 @@ var ProjectsController = /** @class */ (function () {
     //deleteProject
     //deletes the project int he database with id :id
     ProjectsController.prototype.deleteProject = function (req, res) {
-        var id = MongoDB_1.Database.stringToId(req.params.id);
+        var id = MongoDB_1.Database.stringToId(req.body.id);
         ProjectsController.db.deleteRecord(ProjectsController.projectsTable, { _id: id })
             .then(function (results) { return results ? (res.send({ fn: 'deleteProject', status: 'success' })) : (res.send({ fn: 'deleteProject', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });

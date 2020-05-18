@@ -30,7 +30,7 @@ var ProjectsRouter = /** @class */ (function (_super) {
         // this.expressRouter.get('/getProjectsById',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getProjectsById);
         this.expressRouter.post('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.addProject);
         this.expressRouter.put('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.updateProject);
-        this.expressRouter.delete('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.deleteProject);
+        this.expressRouter.post('/deleteProject', [securityMiddleware_1.SecurityMiddleware.RequireAuth], ProjectsRouter.projController.deleteProject);
     };
     ProjectsRouter.projController = new projectsController_1.ProjectsController();
     return ProjectsRouter;

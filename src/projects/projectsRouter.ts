@@ -14,6 +14,6 @@ export class ProjectsRouter extends AppRouter{
         // this.expressRouter.get('/getProjectsById',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getProjectsById);
         this.expressRouter.post('/',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.addProject);
         this.expressRouter.put('/',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.updateProject);
-        this.expressRouter.delete('/:id',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.deleteProject);
+        this.expressRouter.post('/deleteProject',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.deleteProject);
     }    
 }
