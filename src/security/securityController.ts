@@ -58,5 +58,16 @@ export class SecurityController {
                 res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
         }).catch(err=>res.send({ fn: 'changePwd', status: 'failure', data:err }).end());
     }
-
+    //isAdmin - GET
+    //checks if the user represented in the token is an administrator. Returns "True" or "False".
+    //returns a success messager to the client on success, a failure status code on failure
+    isAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
+        SecurityController.db.getOneRecord(SecurityController.usersTable, {email: req.body.authUser.email})
+            .then((userRecord: any)=>{
+                if (userRecord)
+                    res.send({ fn: 'isAdmin', status: 'success', data:userRecord.isAdmin}).end();
+                else 
+                    res.status(400).send({ fn: 'isAdmin', status: 'failure', data:'User not found'}).end();
+            }).catch(err=>res.send({ fn: 'isAdmin', status: 'failure', data:err }).end());
+    }
 }
