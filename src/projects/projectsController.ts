@@ -10,11 +10,18 @@ export class ProjectsController {
 
     //getProjects
     //sends a json object with all projects in the system
-    getProjects(req: express.Request, res: express.Response) {
-        ProjectsController.db.getRecords(ProjectsController.projectsTable, {})
-            .then((results) => res.send({ fn: 'getProjects', status: 'success', data: results }).end())
-            .catch((reason) => res.status(500).send(reason).end());
-
+    getApprovedProjects(req: express.Request, res: express.Response) {
+        ProjectsController.db.getRecords(ProjectsController.projectsTable, {'state':'approved'})
+        .then(results => {
+            results.map((x: any) => 
+                {x.applicant=null;
+                x.approvedBy=null;
+                x.dateSubmitted=null;
+                x.dateUpdated=null;
+                x.posts=null;});
+            res.send({ fn: 'getApprovedProjects', status: 'success', data: { projects: results } })
+        })
+        .catch((reason) => res.status(500).send(reason).end());
     }
     //getProjectsByCurUser
     //sends the specific project as JSON with current user as groupmember
@@ -33,10 +40,14 @@ export class ProjectsController {
     //         .catch((reason) => res.status(500).send(reason).end());
     // }
     //addProject
-    //adds the project to the database
+    //adds the project to the database, set state to pending
     addProject(req: express.Request, res: express.Response) {
         const proj: ProjectsModel = ProjectsModel.fromObject(req.body);
         proj.posts=[];
+        proj.state='pending';
+        proj.applicant=req.body.authUser.email;
+        proj.dateSubmitted=Date.now().toString();
+        proj.dateUpdated=proj.dateSubmitted;
         ProjectsController.db.addRecord(ProjectsController.projectsTable, proj.toObject())
             .then((result: boolean) => res.send({ fn: 'addProject', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());
@@ -64,18 +75,18 @@ export class ProjectsController {
     }
     //getSemesters
     //returns all valid unique semesters in the database
-    getSemesters(req: express.Request, res: express.Response) {
-        ProjectsController.db.getRecords(ProjectsController.projectsTable)
-            .then(results => {
-                //extracts just the semester
-                let semesters = results.map((x: any) => x.semester);
-                //removes duplciates
-                semesters = semesters.filter((value: string, index: number, array: any[]) =>
-                    !array.filter((v, i) => value === v && i < index).length);
-                res.send({ fn: 'getSemesters', status: 'success', data: { semesters: semesters } })
-            })
-            .catch((reason) => res.status(500).send(reason).end());
-    }
+    // getSemesters(req: express.Request, res: express.Response) {
+    //     ProjectsController.db.getRecords(ProjectsController.projectsTable)
+    //         .then(results => {
+    //             //extracts just the semester
+    //             let semesters = results.map((x: any) => x.semester);
+    //             //removes duplciates
+    //             semesters = semesters.filter((value: string, index: number, array: any[]) =>
+    //                 !array.filter((v, i) => value === v && i < index).length);
+    //             res.send({ fn: 'getSemesters', status: 'success', data: { semesters: semesters } })
+    //         })
+    //         .catch((reason) => res.status(500).send(reason).end());
+    // }
     //getProjectNumbers
     //returns all valid unique projectNumbers for a given semesters in the database
     getProjectNumbers(req: express.Request, res: express.Response) {
