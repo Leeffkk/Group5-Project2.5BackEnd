@@ -36,8 +36,14 @@ export class ProjectsController {
     //sends the specific project as JSON with current user as groupmember
     getProjectsByCurUser(req: express.Request, res: express.Response) {
         const user = req.body.authUser;
-        ProjectsController.db.getRecords(ProjectsController.projectsTable, {'groupMembers':{$in:[user.email]}})
-            .then((results) => res.send({ fn: 'getProjectsByCurUser', status: 'success', data: results }).end())
+        ProjectsController.db.getRecords(ProjectsController.projectsTable, {'state':'approved','groupMembers':{$in:[user.email]}})
+            .then((results) => {
+                results.map((x: any) => 
+                {x.applicant=null;
+                x.approvedBy=null;
+                x.dateSubmitted=null;
+                x.dateUpdated=null;});
+                res.send({ fn: 'getProjectsByCurUser', status: 'success', data: results }).end()})
             .catch((reason) => res.status(500).send(reason).end());
     }
     //getProjectsById
