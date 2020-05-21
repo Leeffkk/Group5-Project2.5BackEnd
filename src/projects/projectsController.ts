@@ -77,6 +77,7 @@ export class ProjectsController {
         else{
             const id = Database.stringToId(req.body.id);
             const data = req.body;
+            data.dateUpdated=Date.now().toString();
             delete data.authUser;
             delete data.id;
             ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
