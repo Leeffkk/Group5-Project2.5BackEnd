@@ -39,10 +39,10 @@ export class ProjectsController {
         ProjectsController.db.getRecords(ProjectsController.projectsTable, {'state':'approved','groupMembers':{$in:[user.email]}})
             .then((results) => {
                 results.map((x: any) => 
-                {x.applicant=null;
-                x.approvedBy=null;
-                x.dateSubmitted=null;
-                x.dateUpdated=null;});
+                {delete x.applicant;
+                delete x.approvedBy;
+                delete x.dateSubmitted;
+                delete x.dateUpdated;});
                 res.send({ fn: 'getProjectsByCurUser', status: 'success', data: results }).end()})
             .catch((reason) => res.status(500).send(reason).end());
     }
@@ -116,6 +116,20 @@ export class ProjectsController {
                     .catch(err => res.send({ fn: 'deleteProject', status: 'failure', data: err }).end());
                 }
             }).catch(err => res.send({ fn: 'deleteProject', status: 'failure', data: err }).end());
+        }
+    }
+    //getAllProjects
+    //checks if current user is admin, if True then returns all projects
+    getAllProjects(req: express.Request, res: express.Response) {
+        if (req.body.authUser.isAdmin !== 'True'){
+            res.send({ fn: 'getAllProjects', status: 'failure', data: 'User is not Administrator' });
+        }
+        else{
+            ProjectsController.db.getRecords(ProjectsController.projectsTable, {})
+            .then(results => {
+                res.send({ fn: 'getAllProjects', status: 'success', data: { projects: results } });
+            })
+            .catch((reason) => res.status(500).send(reason).end());
         }
     }
     //getSemesters
