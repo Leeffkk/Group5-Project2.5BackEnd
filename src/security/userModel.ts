@@ -15,17 +15,17 @@ export class UserModel{
     get password():string{return this._password;}
 
     //encrypts password
-    public constructor(email:string,password:string){
+    public constructor(email:string,password:string,isAdmin:string){
         this.email=email;
         this.password=password;
-        this.isAdmin='False';
+        this.isAdmin=isAdmin;
     }
 
     //does not encrypt password, expects already encrypted password
     static fromObject=(obj:any):UserModel=>{
-        const mdl=new UserModel(obj.email,'');
+        const mdl=new UserModel(obj.email,'','');
         mdl._password=obj.password;
-        mdl.isAdmin="False";
+        mdl.isAdmin=obj.isAdmin;
         return mdl;
     }
 

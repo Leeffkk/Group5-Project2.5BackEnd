@@ -28,7 +28,7 @@ export class SecurityController {
     //expects email and password fields to be set in the body of the post request
     //sends a success message to caller on success, or a failure status code on failure
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const user: UserModel = new UserModel(req.body.email, req.body.password);
+        const user: UserModel = new UserModel(req.body.email, req.body.password, 'False');
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
@@ -50,7 +50,7 @@ export class SecurityController {
     //returns a success messager to the client on success, a failure status code on failure
     changePwd(req: express.Request, res: express.Response, next: express.NextFunction) {
         if (!req.body.password) res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
-        const user: UserModel = new UserModel(req.body.authUser.email, req.body.password);
+        const user: UserModel = new UserModel(req.body.authUser.email, req.body.password, req.body.authUser.isAdmin);
         SecurityController.db.updateRecord(SecurityController.usersTable, {email: user.email},{ $set: {password: user.password }}).then((result:Boolean)=>{
             if (result)
                 res.send({ fn: 'changePwd', status: 'success' }).end();

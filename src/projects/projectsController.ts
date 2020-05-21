@@ -14,12 +14,12 @@ export class ProjectsController {
         ProjectsController.db.getRecords(ProjectsController.projectsTable, {'state':'approved'})
         .then(results => {
             results.map((x: any) => 
-                {x.applicant=null;
-                x.approvedBy=null;
-                x.dateSubmitted=null;
-                x.dateUpdated=null;
-                x.posts=null;});
-            res.send({ fn: 'getApprovedProjects', status: 'success', data: { projects: results } })
+                {delete x.applicant;
+                delete x.approvedBy;
+                delete x.dateSubmitted;
+                delete x.dateUpdated;
+                delete x.posts;});
+            res.send({ fn: 'getApprovedProjects', status: 'success', data: { projects: results } });
         })
         .catch((reason) => res.status(500).send(reason).end());
     }
@@ -28,7 +28,7 @@ export class ProjectsController {
     getSubmittedProjects(req: express.Request, res: express.Response) {
         ProjectsController.db.getRecords(ProjectsController.projectsTable, {'applicant':req.body.authUser.email})
         .then(results => {
-            res.send({ fn: 'getSubmittedProjects', status: 'success', data: { projects: results } })
+            res.send({ fn: 'getSubmittedProjects', status: 'success', data: { projects: results } });
         })
         .catch((reason) => res.status(500).send(reason).end());
     }
@@ -71,14 +71,18 @@ export class ProjectsController {
     //updateProject
     //updates the project in the database with id :id
     updateProject(req: express.Request, res: express.Response) {
-        const id = Database.stringToId(req.body.id);
-        const data = req.body;
-        delete data.authUser;
-        delete data.id;
-        ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
-            .then((results) => results ? (res.send({ fn: 'updateProject', status: 'success' })) : (res.send({ fn: 'updateProject', status: 'failure', data: 'Not found' })).end())
-            .catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());
-
+        if (req.body.authUser.isAdmin !== 'True'){
+            res.send({ fn: 'updateProject', status: 'failure', data: 'User is not Administrator' });
+        }
+        else{
+            const id = Database.stringToId(req.body.id);
+            const data = req.body;
+            delete data.authUser;
+            delete data.id;
+            ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
+                .then((results) => results ? (res.send({ fn: 'updateProject', status: 'success' })) : (res.send({ fn: 'updateProject', status: 'failure', data: 'Not found' })).end())
+                .catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());
+        }
     }
     //deleteProject
     //deletes the project int he database with id :id
