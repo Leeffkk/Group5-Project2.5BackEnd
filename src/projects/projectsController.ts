@@ -82,11 +82,16 @@ export class ProjectsController {
                         res.send({ fn: 'updateProject', status: 'failure', data: 'state must be "approved"' });
                     }
                     else{
-                        const data = req.body;
-                        data.dateUpdated=Date.now().toString();
-                        delete data.authUser;
-                        delete data.id;
-                        ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
+                        const proj: ProjectsModel = ProjectsModel.fromObject(req.body);
+                        const tmpObj = proj.toObject();
+                        delete tmpObj.id;
+                        delete tmpObj.posts;
+                        delete tmpObj.state;
+                        delete tmpObj.applicant;
+                        delete tmpObj.approvedBy;
+                        delete tmpObj.dateSubmitted;
+                        tmpObj.dateUpdated=Date.now().toString();
+                        ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: tmpObj })
                             .then((results) => results ? (res.send({ fn: 'updateProject', status: 'success' })) : (res.send({ fn: 'updateProject', status: 'failure', data: 'Not found' })).end())
                             .catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());
                     }
