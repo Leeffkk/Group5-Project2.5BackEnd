@@ -10,6 +10,7 @@ export class ProjectsRouter extends AppRouter{
     //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
     setupRoutes(): void {      
         this.expressRouter.get('/getApprovedProjects',ProjectsRouter.projController.getApprovedProjects);
+        this.expressRouter.get('/getSubmittedProjects',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getSubmittedProjects);
         this.expressRouter.get('/getProjectsByCurUser',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getProjectsByCurUser);
         // this.expressRouter.get('/getProjectsById',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getProjectsById);
         this.expressRouter.post('/',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.addProject);

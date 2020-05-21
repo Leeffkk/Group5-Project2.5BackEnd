@@ -8,7 +8,7 @@ export class ProjectsController {
     static db: Database = new Database(Config.url, "projects");
     static projectsTable = 'projects';
 
-    //getProjects
+    //getApprovedProjects
     //sends a json object with all projects in the system
     getApprovedProjects(req: express.Request, res: express.Response) {
         ProjectsController.db.getRecords(ProjectsController.projectsTable, {'state':'approved'})
@@ -20,6 +20,15 @@ export class ProjectsController {
                 x.dateUpdated=null;
                 x.posts=null;});
             res.send({ fn: 'getApprovedProjects', status: 'success', data: { projects: results } })
+        })
+        .catch((reason) => res.status(500).send(reason).end());
+    }
+    //getSubmittedProjects
+    //sends a json object with all projects in the system
+    getSubmittedProjects(req: express.Request, res: express.Response) {
+        ProjectsController.db.getRecords(ProjectsController.projectsTable, {'applicant':req.body.authUser.email})
+        .then(results => {
+            res.send({ fn: 'getSubmittedProjects', status: 'success', data: { projects: results } })
         })
         .catch((reason) => res.status(500).send(reason).end());
     }
