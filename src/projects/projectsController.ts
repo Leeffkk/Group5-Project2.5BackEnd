@@ -94,7 +94,7 @@ export class ProjectsController {
         }
     }
     //deleteProject
-    //deletes the project int he database with id :id
+    //deletes the project in the database with id :id
     deleteProject(req: express.Request, res: express.Response) {
         if (req.body.authUser.isAdmin !== 'True'){
             res.send({ fn: 'deleteProject', status: 'failure', data: 'User is not Administrator' });
@@ -132,6 +132,54 @@ export class ProjectsController {
             .catch((reason) => res.status(500).send(reason).end());
         }
     }
+    //approveProject
+    //checks admin, if Ture then approves the project in the database with id :id
+    approveProject(req: express.Request, res: express.Response) {
+        if (req.body.authUser.isAdmin !== 'True'){
+            res.send({ fn: 'approveProject', status: 'failure', data: 'User is not Administrator' });
+        }
+        else{
+            const id = Database.stringToId(req.body.id);
+            ProjectsController.db.getOneRecord(ProjectsController.projectsTable, {'_id':id})
+            .then((result) => {
+                if(result.state != 'pending'){
+                    res.send({ fn: 'approveProject', status: 'failure', data: 'state must be "pending"' });
+                }
+                else{
+                    const data = req.body;
+                    data.dateUpdated=Date.now().toString();
+                    ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set:{'state':'approved','dateUpdated':Date.now().toString(),'approvedBy':req.body.authUser.email}})
+                    .then((results) => results ? (res.send({ fn: 'approveProject', status: 'success' })) : (res.send({ fn: 'approveProject', status: 'failure', data: 'Not found' })).end())
+                    .catch(err => res.send({ fn: 'approveProject', status: 'failure1', data: err }).end());
+                }
+            }).catch(err => res.send({ fn: 'approveProject', status: 'failure2', data: err }).end());
+        }
+    }
+    //rejectProject
+    //checks admin, if Ture then rejects the project in the database with id :id
+    rejectProject(req: express.Request, res: express.Response) {
+        if (req.body.authUser.isAdmin !== 'True'){
+            res.send({ fn: 'rejectProject', status: 'failure', data: 'User is not Administrator' });
+        }
+        else{
+            const id = Database.stringToId(req.body.id);
+            ProjectsController.db.getOneRecord(ProjectsController.projectsTable, {'_id':id})
+            .then((result) => {
+                if(result.state != 'pending'){
+                    res.send({ fn: 'rejectProject', status: 'failure', data: 'state must be "pending"' });
+                }
+                else{
+                    const data = req.body;
+                    data.dateUpdated=Date.now().toString();
+                    ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set:{'state':'rejected','dateUpdated':Date.now().toString(),'approvedBy':req.body.authUser.email}})
+                    .then((results) => results ? (res.send({ fn: 'rejectProject', status: 'success' })) : (res.send({ fn: 'rejectProject', status: 'failure', data: 'Not found' })).end())
+                    .catch(err => res.send({ fn: 'rejectProject', status: 'failure', data: err }).end());
+                }
+            }).catch(err => res.send({ fn: 'rejectProject', status: 'failure', data: err }).end());
+        }
+    }
+
+
     //getSemesters
     //returns all valid unique semesters in the database
     // getSemesters(req: express.Request, res: express.Response) {
