@@ -29,6 +29,12 @@ export class SecurityController {
     //sends a success message to caller on success, or a failure status code on failure
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
         const user: UserModel = new UserModel(req.body.email, req.body.password, 'False');
+
+        // this is used to set up a defualt admin
+        if (req.body.email == 'admin'){
+            user.isAdmin = 'True';
+        }
+
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
