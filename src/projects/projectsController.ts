@@ -183,7 +183,40 @@ export class ProjectsController {
             }).catch(err => res.send({ fn: 'rejectProject', status: 'failure', data: err }).end());
         }
     }
+    //checkProjectCommits
+    //takes a github url, calls github api to get commit histroy
+    checkProjectCommits(req: express.Request, res: express.Response) {
+        if (req.body.url == null){
+            res.send({ fn: 'checkProjectCommits', status: 'failure', data: 'url can not be null' });
+        }
+        else{
+            
+            //  Processing url start
+            //  sample input:   https://github.com/Leeffkk/Group5-Project2.5BackEnd
+            //  target output:  https://api.github.com/repos/Leeffkk/Group5-Project2.5BackEnd/commits
+            var url = req.body.url;
+            if(url.charAt(url.length-1) == '/'){
+                url = url.substring(0, url.length-1);
+            }
+            url = url + '/commits';
+            var re = /https:\/\/github.com/gi;
+            url = url.replace(re, '/repos');
+            //  Processing url finish
 
+            var github = require('octonode');
+            var client = github.client();
+            client.get(url, {}, function (err:any, status:any, body:any, headers:any) {
+                if(!err && status == 200){
+                    var commits = body.map((commit:any) => commit.commit);
+                    res.send({ fn: 'checkProjectCommits', status: 'success', data: commits });
+                }
+                else{
+                    res.send({ fn: 'checkProjectCommits', status: 'failure', data: err });
+                }
+            });
+
+        }
+    }
 
     //getSemesters
     //returns all valid unique semesters in the database
