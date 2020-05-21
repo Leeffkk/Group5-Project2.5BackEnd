@@ -76,22 +76,47 @@ export class ProjectsController {
         }
         else{
             const id = Database.stringToId(req.body.id);
-            const data = req.body;
-            data.dateUpdated=Date.now().toString();
-            delete data.authUser;
-            delete data.id;
-            ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
-                .then((results) => results ? (res.send({ fn: 'updateProject', status: 'success' })) : (res.send({ fn: 'updateProject', status: 'failure', data: 'Not found' })).end())
-                .catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());
+            ProjectsController.db.getOneRecord(ProjectsController.projectsTable, {'_id':id})
+                .then((result) => {
+                    if(result.state != 'approved'){
+                        res.send({ fn: 'updateProject', status: 'failure', data: 'state must be "approved"' });
+                    }
+                    else{
+                        const data = req.body;
+                        data.dateUpdated=Date.now().toString();
+                        delete data.authUser;
+                        delete data.id;
+                        ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set: req.body })
+                            .then((results) => results ? (res.send({ fn: 'updateProject', status: 'success' })) : (res.send({ fn: 'updateProject', status: 'failure', data: 'Not found' })).end())
+                            .catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());
+                    }
+                }).catch(err => res.send({ fn: 'updateProject', status: 'failure', data: err }).end());
         }
     }
     //deleteProject
     //deletes the project int he database with id :id
     deleteProject(req: express.Request, res: express.Response) {
-        const id = Database.stringToId(req.body.id);
-        ProjectsController.db.deleteRecord(ProjectsController.projectsTable, { _id: id })
-            .then((results) => results ? (res.send({ fn: 'deleteProject', status: 'success' })) : (res.send({ fn: 'deleteProject', status: 'failure', data: 'Not found' })).end())
-            .catch((reason) => res.status(500).send(reason).end());
+        if (req.body.authUser.isAdmin !== 'True'){
+            res.send({ fn: 'deleteProject', status: 'failure', data: 'User is not Administrator' });
+        }
+        else{
+            const id = Database.stringToId(req.body.id);
+            ProjectsController.db.getOneRecord(ProjectsController.projectsTable, {'_id':id})
+            .then((result) => {
+                if(result.state != 'approved'){
+                    res.send({ fn: 'deleteProject', status: 'failure', data: 'state must be "approved"' });
+                }
+                else{
+                    const data = req.body;
+                    data.dateUpdated=Date.now().toString();
+                    delete data.authUser;
+                    delete data.id;
+                    ProjectsController.db.updateRecord(ProjectsController.projectsTable, { _id: id }, { $set:{'state':'deleted','dateUpdated':Date.now().toString()}})
+                    .then((results) => results ? (res.send({ fn: 'deleteProject', status: 'success' })) : (res.send({ fn: 'deleteProject', status: 'failure', data: 'Not found' })).end())
+                    .catch(err => res.send({ fn: 'deleteProject', status: 'failure', data: err }).end());
+                }
+            }).catch(err => res.send({ fn: 'deleteProject', status: 'failure', data: err }).end());
+        }
     }
     //getSemesters
     //returns all valid unique semesters in the database
@@ -109,18 +134,18 @@ export class ProjectsController {
     // }
     //getProjectNumbers
     //returns all valid unique projectNumbers for a given semesters in the database
-    getProjectNumbers(req: express.Request, res: express.Response) {
-        const semester = req.params.semester;
-        ProjectsController.db.getRecords(ProjectsController.projectsTable,{semester:semester})
-            .then(results => {
-                //extracts just the projectNumber
-                let projects = results.map((x: any) => x.projectNumber);
-                //removes duplciates
-                projects = projects.filter((value: number, index: number, array: any[]) =>
-                    !array.filter((v, i) => value === v && i < index).length);
-                res.send({ fn: 'getProjectNumbers', status: 'success', data: { projectNumbers:projects.sort()} });
-            })
-            .catch((reason) => res.status(500).send(reason).end());
-    }
+    // getProjectNumbers(req: express.Request, res: express.Response) {
+    //     const semester = req.params.semester;
+    //     ProjectsController.db.getRecords(ProjectsController.projectsTable,{semester:semester})
+    //         .then(results => {
+    //             //extracts just the projectNumber
+    //             let projects = results.map((x: any) => x.projectNumber);
+    //             //removes duplciates
+    //             projects = projects.filter((value: number, index: number, array: any[]) =>
+    //                 !array.filter((v, i) => value === v && i < index).length);
+    //             res.send({ fn: 'getProjectNumbers', status: 'success', data: { projectNumbers:projects.sort()} });
+    //         })
+    //         .catch((reason) => res.status(500).send(reason).end());
+    // }
 
 }
