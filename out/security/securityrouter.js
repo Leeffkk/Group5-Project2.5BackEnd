@@ -30,6 +30,7 @@ var SecurityRouter = /** @class */ (function (_super) {
         this.expressRouter.post('/login', securityController.login);
         this.expressRouter.post('/register', securityController.register);
         this.expressRouter.post('/changepwd', [securityMiddleware_1.SecurityMiddleware.RequireAuth], securityController.changePwd);
+        this.expressRouter.get('/isAdmin', [securityMiddleware_1.SecurityMiddleware.RequireAuth], securityController.isAdmin);
     };
     return SecurityRouter;
 }(AppRouter_1.AppRouter));

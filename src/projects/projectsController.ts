@@ -28,6 +28,14 @@ export class ProjectsController {
     getSubmittedProjects(req: express.Request, res: express.Response) {
         ProjectsController.db.getRecords(ProjectsController.projectsTable, {'applicant':req.body.authUser.email})
         .then(results => {
+            results.map((x: any) => {
+                if(x.dateSubmitted){
+                    x.dateSubmitted = new Date(parseInt(x.dateSubmitted)).toUTCString();
+                }
+                if(x.dateUpdated){
+                    x.dateUpdated = new Date(parseInt(x.dateUpdated)).toUTCString();
+                }
+            });
             res.send({ fn: 'getSubmittedProjects', status: 'success', data: { projects: results } });
         })
         .catch((reason) => res.status(500).send(reason).end());
@@ -132,6 +140,14 @@ export class ProjectsController {
         else{
             ProjectsController.db.getRecords(ProjectsController.projectsTable, {})
             .then(results => {
+                results.map((x: any) => {
+                    if(x.dateSubmitted){
+                        x.dateSubmitted = new Date(parseInt(x.dateSubmitted)).toUTCString();
+                    }
+                    if(x.dateUpdated){
+                        x.dateUpdated = new Date(parseInt(x.dateUpdated)).toUTCString();
+                    }
+                });
                 res.send({ fn: 'getAllProjects', status: 'success', data: { projects: results } });
             })
             .catch((reason) => res.status(500).send(reason).end());

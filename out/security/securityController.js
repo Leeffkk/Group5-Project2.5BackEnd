@@ -31,7 +31,11 @@ var SecurityController = /** @class */ (function () {
     //expects email and password fields to be set in the body of the post request
     //sends a success message to caller on success, or a failure status code on failure
     SecurityController.prototype.register = function (req, res, next) {
-        var user = new userModel_1.UserModel(req.body.email, req.body.password);
+        var user = new userModel_1.UserModel(req.body.email, req.body.password, 'False');
+        // this is used to set up a defualt admin
+        if (req.body.email == 'admin') {
+            user.isAdmin = 'True';
+        }
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then(function (userRecord) {
             if (userRecord)
@@ -55,13 +59,25 @@ var SecurityController = /** @class */ (function () {
     SecurityController.prototype.changePwd = function (req, res, next) {
         if (!req.body.password)
             res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
-        var user = new userModel_1.UserModel(req.body.authUser.email, req.body.password);
+        var user = new userModel_1.UserModel(req.body.authUser.email, req.body.password, req.body.authUser.isAdmin);
         SecurityController.db.updateRecord(SecurityController.usersTable, { email: user.email }, { $set: { password: user.password } }).then(function (result) {
             if (result)
                 res.send({ fn: 'changePwd', status: 'success' }).end();
             else
                 res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
         }).catch(function (err) { return res.send({ fn: 'changePwd', status: 'failure', data: err }).end(); });
+    };
+    //isAdmin - GET
+    //checks if the user represented in the token is an administrator. Returns "True" or "False".
+    //returns a success messager to the client on success, a failure status code on failure
+    SecurityController.prototype.isAdmin = function (req, res, next) {
+        SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.authUser.email })
+            .then(function (userRecord) {
+            if (userRecord)
+                res.send({ fn: 'isAdmin', status: 'success', data: userRecord.isAdmin }).end();
+            else
+                res.status(400).send({ fn: 'isAdmin', status: 'failure', data: 'User not found' }).end();
+        }).catch(function (err) { return res.send({ fn: 'isAdmin', status: 'failure', data: err }).end(); });
     };
     SecurityController.db = new MongoDB_1.Database(config_1.Config.url, "security");
     SecurityController.usersTable = 'users';

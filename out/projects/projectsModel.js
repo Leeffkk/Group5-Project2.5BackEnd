@@ -9,6 +9,11 @@ var ProjectsModel = /** @class */ (function () {
         this.url = '';
         this.groupMembers = [];
         this.posts = [];
+        this.state = '';
+        this.applicant = '';
+        this.approvedBy = '';
+        this.dateSubmitted = '';
+        this.dateUpdated = '';
     }
     ProjectsModel.fromObject = function (object) {
         var p = new ProjectsModel();
@@ -20,11 +25,26 @@ var ProjectsModel = /** @class */ (function () {
             tmp = tmp.substring(1, tmp.length - 1);
             p.groupMembers = tmp.split(",");
         }
+        //TODO:: maybe need to rewrite
         p.posts = object.posts;
+        p.state = object.state;
+        p.applicant = object.applicant;
+        p.approvedBy = object.approvedBy;
+        p.dateSubmitted = object.dateSubmitted;
+        p.dateUpdated = object.dateUpdated;
         return p;
     };
     ProjectsModel.prototype.toObject = function () {
-        return { name: this.name, description: this.description, url: this.url, groupMembers: this.groupMembers, posts: this.posts };
+        return { name: this.name,
+            description: this.description,
+            url: this.url,
+            groupMembers: this.groupMembers,
+            posts: this.posts,
+            state: this.state,
+            applicant: this.applicant,
+            approvedBy: this.approvedBy,
+            dateSubmitted: this.dateSubmitted,
+            dateUpdated: this.dateUpdated };
     };
     return ProjectsModel;
 }());
