@@ -19,6 +19,6 @@ export class ProjectsRouter extends AppRouter{
         this.expressRouter.get('/getAllProjects',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.getAllProjects);
         this.expressRouter.post('/approveProject',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.approveProject);
         this.expressRouter.post('/rejectProject',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.rejectProject);
-        this.expressRouter.get('/checkProjectCommits',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.checkProjectCommits);
+        this.expressRouter.post('/checkProjectCommits',[SecurityMiddleware.RequireAuth],ProjectsRouter.projController.checkProjectCommits);
     }
 }
